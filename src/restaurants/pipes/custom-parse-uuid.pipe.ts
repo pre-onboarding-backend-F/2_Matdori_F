@@ -5,7 +5,7 @@ export class CustomParseUUIDPipe extends ParseUUIDPipe {
 		try {
 			return await super.transform(value, metadata);
 		} catch {
-			throw this.exceptionFactory('잘못된 레스토랑 id 형식입니다.');
+			throw this.exceptionFactory('잘못된 id 형식입니다.');
 		}
 	}
 }
