@@ -18,4 +18,13 @@ export const validationSchema = Joi.object({
 	JWT_ACCESS_EXPIRATION_TIME: Joi.number().required(),
 	JWT_REFRESH_SECRET_KEY: Joi.string().required(),
 	JWT_REFRESH_EXPIRATION_TIME: Joi.number().required(),
+
+	// OPEN API
+	OPEN_API_JAPANESE_FOOD_URL: Joi.string().required(),
+	OPEN_API_CHINESE_FOOD_URL: Joi.string().required(),
+	OPEN_API_KOREAN_FOOD_URL: Joi.string().required(),
+
+	JAPANESE_FOOD_AUTH_KEY: Joi.string().required(),
+	CHINESE_FOOD_AUTH_KEY: Joi.string().required(),
+	KOREAN_FOOD_AUTH_KEY: Joi.string().required(),
 });
