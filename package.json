@@ -7,7 +7,7 @@
     "license": "UNLICENSED",
     "scripts": {
         "build": "nest build",
-        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
         "start": "nest start",
         "start:dev": "TZ=Asia/Seoul NODE_ENV=development nest start --watch",
         "start:debug": "nest start --debug --watch",
@@ -29,6 +29,7 @@
         "@nestjs/mapped-types": "*",
         "@nestjs/passport": "^10.0.2",
         "@nestjs/platform-express": "^9.0.0",
+        "@nestjs/schedule": "^4.0.0",
         "@nestjs/typeorm": "^10.0.0",
         "@types/jsonwebtoken": "^9.0.4",
         "bcryptjs": "^2.4.3",
