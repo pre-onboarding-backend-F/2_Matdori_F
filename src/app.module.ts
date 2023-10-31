@@ -5,6 +5,7 @@ import { validationSchema } from './global/configs/validation.schema';
 import { ScheduleModule } from './schedule/schedule.module';
 import jwtConfiguration from './global/configs/jwt.configuration';
 import openApiConfiguration from './global/configs/open-api.configuration';
+import { RestaurantsModule } from './restaurants/restaurants.module';
 
 @Module({
 	imports: [
@@ -17,6 +18,7 @@ import openApiConfiguration from './global/configs/open-api.configuration';
 		}),
 		DatabaseModule,
 		ScheduleModule,
+		RestaurantsModule,
 	],
 })
 export class AppModule {}
