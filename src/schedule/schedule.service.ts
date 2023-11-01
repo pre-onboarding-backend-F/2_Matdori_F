@@ -53,8 +53,7 @@ export class ScheduleService {
 		});
 	}
 
-	//@Cron('5 15 * * *')
-	@Cron(CronExpression.EVERY_MINUTE)
+	@Cron('* 19 * * *')
 	private cronJob() {
 		this.job({ pageIndex: 1, pagePerRow: 1000, type: Category.JAPANESE });
 		this.job({ pageIndex: 1, pagePerRow: 1000, type: Category.KOREAN });
