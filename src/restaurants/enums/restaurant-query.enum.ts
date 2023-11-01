@@ -13,3 +13,7 @@ export enum RestaurantQueryOrder {
 	DESC = 'desc',
 	ASC = 'asc',
 }
+
+export enum RestaurantQuerySearchBy {
+	NAME = 'name',
+}
