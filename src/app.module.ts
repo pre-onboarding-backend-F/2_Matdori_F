@@ -7,6 +7,8 @@ import jwtConfiguration from './global/configs/jwt.configuration';
 import openApiConfiguration from './global/configs/open-api.configuration';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { UsersModule } from './users/users.module';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
 	imports: [
@@ -21,6 +23,7 @@ import { UsersModule } from './users/users.module';
 		ScheduleModule,
 		RestaurantsModule,
 		UsersModule,
+		AuthModule,
 	],
 })
 export class AppModule {}
