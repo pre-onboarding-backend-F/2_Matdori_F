@@ -1,6 +1,7 @@
 import { BaseEntity } from 'src/global/entities/base.entity';
 import { Column, Entity } from 'typeorm';
-import { RestaurantCategory, RestaurantStatus } from '../enums/restaurant.enum';
+import { RestaurantCategory } from '../enums/restaurant.enum';
+import { BusinessState } from 'src/global/enums/business-state.enum';
 
 @Entity()
 export class Restaurant extends BaseEntity {
@@ -9,9 +10,9 @@ export class Restaurant extends BaseEntity {
 
 	@Column({
 		type: 'enum',
-		enum: RestaurantStatus,
+		enum: BusinessState,
 	})
-	status: RestaurantStatus;
+	status: BusinessState;
 
 	@Column({
 		type: 'numeric',
@@ -34,10 +35,13 @@ export class Restaurant extends BaseEntity {
 	rating: number;
 
 	@Column({
-		name: 'road_addr',
-		unique: true,
+		name: 'road_address',
+		comment: '도로명 주소',
 	})
-	roadAddr: string;
+	roadAddress: string;
+
+	@Column({ comment: '지번주소' })
+	address: string;
 
 	@Column({
 		type: 'enum',
