@@ -7,6 +7,7 @@ import {
 	UseInterceptors,
 	Body,
 	UseGuards,
+	Patch,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { HttpExceptionFilter } from 'src/global/filters/http-exception.filter';
@@ -19,6 +20,8 @@ import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
 import { GetUser } from 'src/global/decorators/get-user.decorator';
 import { User } from './entity/user.entity';
 import { RtGuard } from 'src/global/guard/refresh.token.quard';
+import { LocationDto } from './dto/location-user.dto';
+import { LunchRecommendDto } from './dto/lunch-recommend.dto';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -51,5 +54,26 @@ export class UsersController {
 	@ResponseMessage(UserResponseMesaage.REFRESH)
 	async refresh(@GetUser() user: User) {
 		return await this.usersService.refresh(user);
+	}
+
+	@Patch('geo')
+	@UseGuards(AtGuard)
+	@ResponseMessage(UserResponseMesaage.LOCATION)
+	async locationUpdate(@GetUser() user: User, @Body() locationDto: LocationDto) {
+		return await this.usersService.locationUpdate(user, locationDto);
+	}
+
+	@Patch('lunch')
+	@UseGuards(AtGuard)
+	@ResponseMessage(UserResponseMesaage.LUNCH_RECOMM)
+	async lunchRecommUpdate(@GetUser() user: User, @Body() lunchRecommendDto: LunchRecommendDto) {
+		return await this.usersService.lunchRecommUpdate(user, lunchRecommendDto);
+	}
+
+	@Get()
+	@UseGuards(AtGuard)
+	@ResponseMessage(UserResponseMesaage.GET_USER)
+	async getUser(@GetUser() user: User) {
+		return user;
 	}
 }

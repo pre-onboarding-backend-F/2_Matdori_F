@@ -16,4 +16,9 @@ export class UsersException {
 		message: '패스워드가 일치하지 않습니다.',
 		error: ExceptionObjError.BAD_REQUEST,
 	};
+
+	static LOCATION_IS_EMPTY: ExceptionObj = {
+		message: '위도와 경도값을 확인해주세요.',
+		error: ExceptionObjError.BAD_REQUEST,
+	};
 }
