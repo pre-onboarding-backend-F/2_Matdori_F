@@ -17,7 +17,6 @@ export class User extends BaseEntity {
 		scale: 10,
 		nullable: true,
 	})
-	@Exclude()
 	lat: number;
 
 	@Column({
@@ -26,7 +25,6 @@ export class User extends BaseEntity {
 		scale: 10,
 		nullable: true,
 	})
-	@Exclude()
 	lon: number;
 
 	@Column({
@@ -34,7 +32,6 @@ export class User extends BaseEntity {
 		type: 'smallint',
 		width: 1,
 	})
-	@Exclude()
 	lunchRecomm: number;
 
 	@Column({ nullable: true })
