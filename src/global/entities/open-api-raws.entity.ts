@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
 @Entity({ name: 'open_api_raws' })
@@ -74,4 +74,15 @@ export class OpenApiRaws extends BaseEntity {
 
 	@Column({ unique: true })
 	nameAndAddress: string;
+
+	@BeforeInsert()
+	transform() {
+		if (this.category === '김밥(도시락)') this.category = '한식';
+		if (this.category === '중국식') this.category = '중식';
+
+		this.name = this.name.replace(/[._-\s]/g, '');
+		this.address = this.address.replace(/[,.\s]/g, '');
+
+		this.nameAndAddress = this.name + '_' + this.address;
+	}
 }

@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { forkJoin, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpService } from '@nestjs/axios';
@@ -9,10 +9,12 @@ import { Category } from 'src/global/enums/category.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OpenApiRaws } from 'src/global/entities/open-api-raws.entity';
 import { Repository } from 'typeorm';
-import { OpenApiResults, Row } from './interfaces/open-api-result.interface';
+import { OpenApiResults, Row } from './interfaces/open-api-response.interface';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { SchduleCollectionEvent } from './interfaces/schedule-collection.event';
 
 @Injectable()
-export class ScheduleService implements OnModuleInit {
+export class ScheduleService {
 	private reapeatCount = 10;
 
 	constructor(
@@ -21,15 +23,15 @@ export class ScheduleService implements OnModuleInit {
 		private apiConfig: ConfigType<typeof openApiConfiguration>,
 		@InjectRepository(OpenApiRaws)
 		private rawsRepository: Repository<OpenApiRaws>,
+		private event: EventEmitter2,
 	) {}
 
-	async onModuleInit() {
-		await this.crawler({ type: Category.JAPANESE, pagePerRow: 1000, pageIndex: 1 });
-		await this.crawler({ type: Category.KOREAN, pagePerRow: 1000, pageIndex: 1 });
-		await this.crawler({ type: Category.CHINESE, pagePerRow: 1000, pageIndex: 1 });
+	jobEventEmitter(options: OpenApiOptions) {
+		this.event.emit('schedule.job', new SchduleCollectionEvent(options));
 	}
 
-	async crawler(options: OpenApiOptions) {
+	@OnEvent('schedule.job')
+	async job(options: OpenApiOptions) {
 		const observables = Array(this.reapeatCount)
 			.fill(0)
 			.map(() =>
@@ -38,10 +40,15 @@ export class ScheduleService implements OnModuleInit {
 
 		const results: OpenApiResults = await forkJoin(observables).toPromise();
 
-		await this.insertRaws(results);
+		await this.collect(results);
 	}
 
-	call(options: OpenApiOptions) {
+	private call(options: OpenApiOptions) {
+		const url = this.urlGenerator(options);
+		return from(this.httpService.get(url)).pipe(map((response) => response.data));
+	}
+
+	private urlGenerator(options: OpenApiOptions) {
 		const { type, pageIndex, pagePerRow, sigunName, sigunCode } = options;
 		let baseUrl = '';
 
@@ -54,10 +61,10 @@ export class ScheduleService implements OnModuleInit {
 		if (sigunCode) baseUrl += `&SIGUN_CD=${sigunCode}`;
 		if (sigunName) baseUrl += `&SIGUN_NM=${sigunName}`;
 
-		return from(this.httpService.get(baseUrl)).pipe(map((response) => response.data));
+		return baseUrl;
 	}
 
-	async insertRaws(openApiResults: OpenApiResults) {
+	private async collect(openApiResults: OpenApiResults) {
 		for (const openApiResult of openApiResults) {
 			if (openApiResult.Genrestrtjpnfood) {
 				const rows = openApiResult.Genrestrtjpnfood[1].row;
@@ -76,12 +83,9 @@ export class ScheduleService implements OnModuleInit {
 		}
 	}
 
-	async upsert(rows: Row[]) {
+	private async upsert(rows: Row[]) {
 		for (const row of rows) {
 			try {
-				if (row.SANITTN_BIZCOND_NM === '김밥(도시락)') row.SANITTN_BIZCOND_NM = '한식';
-				if (row.SANITTN_BIZCOND_NM === '중국식') row.SANITTN_BIZCOND_NM = '중식';
-
 				const newRaw = this.rawsRepository.create({
 					sigunName: row.SIGUN_NM,
 					sigunCode: row.SIGUN_CD,
@@ -99,8 +103,6 @@ export class ScheduleService implements OnModuleInit {
 					zipCode: row.REFINE_ZIP_CD,
 					lat: row.REFINE_WGS84_LAT,
 					lon: row.REFINE_WGS84_LOGT,
-					nameAndAddress:
-						row.BIZPLC_NM.replace(/[._-\s]/g, '') + '_' + row.REFINE_LOTNO_ADDR.replace(/[,.\s]/g, ''),
 				});
 
 				await this.rawsRepository.upsert(newRaw, ['nameAndAddress']);
