@@ -6,4 +6,14 @@ export class UsersException {
 		message: '이미 회원가입 되어있는 계정입니다.',
 		error: ExceptionObjError.BAD_REQUEST,
 	};
+
+	static USER_NOT_EXISTS: ExceptionObj = {
+		message: '존재하지 않는 계정입니다.',
+		error: ExceptionObjError.BAD_REQUEST,
+	};
+
+	static USER_PASSWORD_NOT_MATCHED: ExceptionObj = {
+		message: '패스워드가 일치하지 않습니다.',
+		error: ExceptionObjError.BAD_REQUEST,
+	};
 }
