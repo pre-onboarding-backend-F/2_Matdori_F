@@ -1,12 +1,3 @@
-export interface Head {
-	list_total_count: number;
-	RESULT: {
-		CODE: string;
-		MESSAGE: string;
-	};
-	api_version: string;
-}
-
 export interface Row {
 	SIGUN_NM: string;
 	SIGUN_CD: null;
@@ -32,14 +23,3 @@ export interface Row {
 	REFINE_WGS84_LOGT: string;
 	REFINE_WGS84_LAT: string;
 }
-
-export interface OpenApiResultArray {
-	head: Head[];
-	row: Row[];
-}
-
-export interface OpenApiResult<T> {
-	[key: string]: T[];
-}
-
-export type OpenApiResults = OpenApiResult<OpenApiResultArray>[];
