@@ -8,6 +8,8 @@ import { UsersException } from 'src/users/classes/user.exception.message';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { TokenPayload } from 'src/global/interfaces/token.payload';
+import { LocationDto } from './dto/location-user.dto';
+import { LunchRecommendDto } from './dto/lunch-recommend.dto';
 
 @Injectable()
 export class UsersService {
@@ -40,10 +42,8 @@ export class UsersService {
 
 		await this.userRepository.save(newUser);
 
-		newUser.id = undefined;
-		newUser.createdAt = undefined;
-		newUser.updatedAt = undefined;
-		newUser.deletedAt = undefined;
+		const propertiesToInitialize = ['id', 'createdAt', 'updatedAt', 'deletedAt', 'lat', 'lon', 'lunchRecomm'];
+		propertiesToInitialize.forEach((property) => (newUser[property] = undefined));
 
 		return newUser;
 	}
@@ -86,6 +86,34 @@ export class UsersService {
 		const payload: TokenPayload = { id: user.id, account: user.account };
 		return {
 			accessToken: this.authService.generateAccessToken(payload),
+		};
+	}
+
+	async locationUpdate(user: User, locationDto: LocationDto) {
+		const { lat, lon } = locationDto;
+
+		if (lat === 0 || lon === 0) throw new BadRequestException(UsersException.LOCATION_IS_EMPTY);
+
+		user.lat = lat;
+		user.lon = lon;
+
+		await this.userRepository.save(user);
+
+		return {
+			latitude: lat,
+			longitude: lon,
+		};
+	}
+
+	async lunchRecommUpdate(user: User, lunchRecommendDto: LunchRecommendDto) {
+		const { lunchRecomm } = lunchRecommendDto;
+
+		user.lunchRecomm = lunchRecomm;
+
+		await this.userRepository.save(user);
+
+		return {
+			lunchRecomm: lunchRecomm,
 		};
 	}
 }
