@@ -1,5 +1,5 @@
-import { ExceptionObjError } from '../enums/exception-obj-error.enum';
-import { ExceptionObj } from '../interfaces/exception.obj';
+import { ExceptionObjError } from '../../global/enums/exception-obj-error.enum';
+import { ExceptionObj } from '../../global/interfaces/exception.obj';
 
 export class UsersException {
 	static USER_ACCOUNT_ALREADY_EXISTS: ExceptionObj = {
