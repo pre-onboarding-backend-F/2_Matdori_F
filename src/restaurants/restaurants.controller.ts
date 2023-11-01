@@ -15,7 +15,7 @@ export class RestaurantsController {
 	@Get()
 	@ResponseMessage(RestaurantResponse.GET_POSTS)
 	getPosts(@Query() getPostsDto: GetPostsDto) {
-		console.log(getPostsDto);
+		return this.restaurantsService.getPosts(getPostsDto);
 	}
 
 	@Get(':id')
