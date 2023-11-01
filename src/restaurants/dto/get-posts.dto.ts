@@ -1,4 +1,14 @@
-import { IsEnum, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
+import {
+	IsEnum,
+	IsInt,
+	IsLatitude,
+	IsLongitude,
+	IsNotEmpty,
+	IsOptional,
+	IsPositive,
+	IsString,
+	Max,
+} from 'class-validator';
 import {
 	RestaurantQueryOrder,
 	RestaurantQueryOrderBy,
@@ -55,5 +65,6 @@ export class GetPostsDto {
 	@IsOptional()
 	@IsInt({ message: 'count 필드에 숫자를 입력해야 합니다.' })
 	@IsPositive({ message: 'count 필드에 음수를 입력할 수 없습니다.' })
+	@Max(20, { message: 'count 필드의 최대 값은 20입니다.' })
 	count = 10; // default: 10
 }
