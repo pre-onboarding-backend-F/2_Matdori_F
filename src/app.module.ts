@@ -6,6 +6,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import jwtConfiguration from './global/configs/jwt.configuration';
 import openApiConfiguration from './global/configs/open-api.configuration';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
 	imports: [
@@ -19,6 +20,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 		DatabaseModule,
 		ScheduleModule,
 		RestaurantsModule,
+		UsersModule,
 	],
 })
 export class AppModule {}
