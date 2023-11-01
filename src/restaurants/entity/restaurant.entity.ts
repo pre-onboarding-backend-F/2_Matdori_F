@@ -5,7 +5,7 @@ import { BusinessState } from 'src/global/enums/business-state.enum';
 
 @Entity()
 export class Restaurant extends BaseEntity {
-	@Column()
+	@Column({ unique: true })
 	name: string;
 
 	@Column({
@@ -37,6 +37,7 @@ export class Restaurant extends BaseEntity {
 	@Column({
 		name: 'road_address',
 		comment: '도로명 주소',
+		nullable: true,
 	})
 	roadAddress: string;
 

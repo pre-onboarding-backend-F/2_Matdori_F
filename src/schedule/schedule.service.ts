@@ -8,15 +8,17 @@ import { OpenApiOptions } from './interfaces/open-api-options.interface';
 import { Category } from 'src/global/enums/category.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OpenApiRaws } from 'src/global/entities/open-api-raws.entity';
-import { Repository } from 'typeorm';
-import { Row } from './interfaces/open-api-response.interface';
+import { IsNull, Not, Repository } from 'typeorm';
+import { Row } from './interfaces/row.interface';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { SchduleCollectionEvent } from './classes/schedule-collection.event';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
+import { Restaurant } from 'src/restaurants/entity/restaurant.entity';
+import { RestaurantCategory } from 'src/restaurants/enums/restaurant.enum';
+import { BusinessState } from 'src/global/enums/business-state.enum';
 
 @Injectable()
 export class ScheduleService {
-	private reapeatCount = 10;
+	private reapeatCount = 20;
 	private logger = new Logger(ScheduleService.name);
 
 	constructor(
@@ -25,11 +27,19 @@ export class ScheduleService {
 		private apiConfig: ConfigType<typeof openApiConfiguration>,
 		@InjectRepository(OpenApiRaws)
 		private rawsRepository: Repository<OpenApiRaws>,
+		@InjectRepository(Restaurant)
+		private restaurantRepository: Repository<Restaurant>,
 		private event: EventEmitter2,
 	) {}
 
-	jobEventEmitter(options: OpenApiOptions) {
-		this.event.emit('schedule.job', new SchduleCollectionEvent(options));
+	jobEventEmitter() {
+		this.event.emit('schedule.job', { pageIndex: 1, pagePerRow: 1000, type: Category.JAPANESE });
+		this.event.emit('schedule.job', { pageIndex: 1, pagePerRow: 1000, type: Category.KOREAN });
+		this.event.emit('schedule.job', { pageIndex: 1, pagePerRow: 1000, type: Category.CHINESE });
+	}
+
+	preprocessEmitter() {
+		this.event.emit('schedule.saveRestaurant');
 	}
 
 	@OnEvent('schedule.job')
@@ -44,9 +54,9 @@ export class ScheduleService {
 			next: (res: any) => {
 				for (const data of res) {
 					if (!data.RESULT) {
-						if (data.Genrestrtjpnfood) this.upsert(data.Genrestrtjpnfood[1].row);
-						if (data.Genrestrtlunch) this.upsert(data.Genrestrtlunch[1].row);
-						if (data.Genrestrtchifood) this.upsert(data.Genrestrtchifood[1].row);
+						if (data.Genrestrtjpnfood) this.saveAsRaws(data.Genrestrtjpnfood[1].row);
+						if (data.Genrestrtlunch) this.saveAsRaws(data.Genrestrtlunch[1].row);
+						if (data.Genrestrtchifood) this.saveAsRaws(data.Genrestrtchifood[1].row);
 					}
 				}
 			},
@@ -81,9 +91,57 @@ export class ScheduleService {
 		return baseUrl;
 	}
 
-	private async upsert(rows: Row[]) {
+	@Cron('5 19 * * *')
+	@OnEvent('schedule.saveRestaurant')
+	private async saveAsRestaurant() {
+		const raws = await this.dataPreprocess();
+
+		for (const raw of raws) {
+			const newRestaurant = this.restaurantRepository.create({
+				address: raw.address,
+				status: raw.state,
+				lat: raw.lat,
+				lon: raw.lon,
+				roadAddress: raw.roadAddress,
+				name: raw.name,
+				category: raw.category,
+			});
+
+			await this.restaurantRepository.upsert(newRestaurant, ['name']);
+		}
+	}
+
+	private async dataPreprocess() {
+		const raws = await this.rawsRepository.find({
+			select: {
+				name: true,
+				state: true,
+				lat: true,
+				lon: true,
+				roadAddress: true,
+				address: true,
+				category: true,
+				nameAddress: true,
+			},
+			where: {
+				state: Not(BusinessState.CLOSED),
+				lat: Not(IsNull()),
+				lon: Not(IsNull()),
+			},
+		});
+
+		return raws;
+	}
+
+	private async saveAsRaws(rows: Row[]) {
 		for (const row of rows) {
 			try {
+				let category: RestaurantCategory;
+
+				if (row.SANITTN_BIZCOND_NM === '김밥(도시락)') category = RestaurantCategory.KOREAN;
+				if (row.SANITTN_BIZCOND_NM === '중국식') category = RestaurantCategory.CHINESE;
+				if (row.SANITTN_BIZCOND_NM === '일식') category = RestaurantCategory.JAPANESE;
+
 				const newRaw = this.rawsRepository.create({
 					sigunName: row.SIGUN_NM,
 					sigunCode: row.SIGUN_CD,
@@ -94,7 +152,7 @@ export class ScheduleService {
 					maleWorkers: row.MALE_ENFLPSN_CNT,
 					femaleWorkers: row.FEMALE_ENFLPSN_CNT,
 					zoningName: row.BSNSITE_CIRCUMFR_DIV_NM,
-					category: row.SANITTN_BIZCOND_NM,
+					category,
 					totalEmploymentCount: row.TOT_EMPLY_CNT,
 					roadAddress: row.REFINE_ROADNM_ADDR,
 					address: row.REFINE_LOTNO_ADDR,
