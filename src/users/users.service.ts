@@ -7,6 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import { UsersException } from 'src/users/classes/user.exception.message';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { TokenPayload } from 'src/global/interfaces/token.payload';
 
 @Injectable()
 export class UsersService {
@@ -75,5 +76,16 @@ export class UsersService {
 		}
 
 		throw new BadRequestException(UsersException.USER_NOT_EXISTS);
+	}
+
+	async logoutUser(user: User) {
+		await this.userRepository.update({ id: user.id }, { refreshToken: null });
+	}
+
+	async refresh(user: User) {
+		const payload: TokenPayload = { id: user.id, account: user.account };
+		return {
+			accessToken: this.authService.generateAccessToken(payload),
+		};
 	}
 }
