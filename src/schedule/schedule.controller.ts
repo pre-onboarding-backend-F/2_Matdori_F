@@ -1,15 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
+import { Post, Controller } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
-import { Category } from 'src/global/enums/category.enum';
+import { ResponseMessage } from 'src/global/decorators/response-key.decorator';
+import { ScheduleResponseMessage } from './classes/schedule.response.message';
 
 @Controller('schedule')
 export class ScheduleController {
 	constructor(private readonly scheduleService: ScheduleService) {}
 
-	@Get('collect')
+	@Post('event/collect')
+	@ResponseMessage(ScheduleResponseMessage.COLLECT)
 	collect() {
-		this.scheduleService.jobEventEmitter({ pageIndex: 1, pagePerRow: 1000, type: Category.JAPANESE });
-		this.scheduleService.jobEventEmitter({ pageIndex: 1, pagePerRow: 1000, type: Category.KOREAN });
-		this.scheduleService.jobEventEmitter({ pageIndex: 1, pagePerRow: 1000, type: Category.CHINESE });
+		this.scheduleService.jobEventEmitter();
+	}
+
+	@Post('event/preprocess')
+	@ResponseMessage(ScheduleResponseMessage.PREPROCESS)
+	preprocess() {
+		this.scheduleService.preprocessEmitter();
 	}
 }

@@ -1,5 +1,7 @@
 import { BeforeInsert, Column, Entity } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { BusinessState } from '../enums/business-state.enum';
+import { RestaurantCategory } from 'src/restaurants/enums/restaurant.enum';
 
 @Entity({ name: 'open_api_raws' })
 export class OpenApiRaws extends BaseEntity {
@@ -15,8 +17,8 @@ export class OpenApiRaws extends BaseEntity {
 	@Column({ comment: '인허가일자' })
 	license: string;
 
-	@Column({ comment: '영업상태명' })
-	state: string;
+	@Column({ type: 'enum', enum: BusinessState, comment: '영업상태명' })
+	state: BusinessState;
 
 	@Column({ name: 'closed_date', comment: '폐업 일자', nullable: true })
 	closedDate: string;
@@ -51,8 +53,8 @@ export class OpenApiRaws extends BaseEntity {
 	//@Column({ comment: '위생 업종명', default: null })
 	//industryType: null;
 
-	@Column({ comment: '위생 업태명 (한식, 중식, 일식)' })
-	category: string;
+	@Column({ type: 'enum', enum: RestaurantCategory, comment: '위생 업태명 (한식, 중식, 일식)' })
+	category: RestaurantCategory;
 
 	@Column({ name: 'total_employment_count', comment: '총 종업원 수', nullable: true })
 	totalEmploymentCount: number | null;
@@ -73,22 +75,16 @@ export class OpenApiRaws extends BaseEntity {
 		comment: '소재지 위도',
 		nullable: true,
 	})
-	lat: string;
+	lat: number;
 
 	@Column({ type: 'numeric', precision: 13, scale: 10, comment: '소재지 경도', nullable: true })
-	lon: string;
+	lon: number;
 
 	@Column({ name: 'name_address', unique: true })
 	nameAddress: string;
 
 	@BeforeInsert()
 	transform() {
-		if (this.category === '김밥(도시락)') this.category = '한식';
-		if (this.category === '중국식') this.category = '중식';
-
-		this.name = this.name.replace(/[._-\s]/g, '');
-		this.address = this.address.replace(/[,.\s]/g, '');
-
-		this.nameAddress = this.name + '_' + this.address;
+		this.nameAddress = this.name.replace(/[._-\s]/g, '') + '_' + this.address.replace(/[,.\s]/g, '');
 	}
 }

@@ -1,9 +1,11 @@
+import { BusinessState } from 'src/global/enums/business-state.enum';
+
 export interface Row {
 	SIGUN_NM: string;
 	SIGUN_CD: null;
 	BIZPLC_NM: string;
 	LICENSG_DE: string;
-	BSN_STATE_NM: string;
+	BSN_STATE_NM: BusinessState;
 	CLSBIZ_DE: null;
 	LOCPLC_AR: null;
 	GRAD_FACLT_DIV_NM: null;
@@ -20,6 +22,6 @@ export interface Row {
 	REFINE_LOTNO_ADDR: string;
 	REFINE_ROADNM_ADDR: string;
 	REFINE_ZIP_CD: string;
-	REFINE_WGS84_LOGT: string;
-	REFINE_WGS84_LAT: string;
+	REFINE_WGS84_LOGT: number;
+	REFINE_WGS84_LAT: number;
 }
