@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { forkJoin, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpService } from '@nestjs/axios';
@@ -9,13 +9,15 @@ import { Category } from 'src/global/enums/category.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OpenApiRaws } from 'src/global/entities/open-api-raws.entity';
 import { Repository } from 'typeorm';
-import { OpenApiResults, Row } from './interfaces/open-api-response.interface';
+import { Row } from './interfaces/open-api-response.interface';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import { SchduleCollectionEvent } from './interfaces/schedule-collection.event';
+import { SchduleCollectionEvent } from './classes/schedule-collection.event';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class ScheduleService {
 	private reapeatCount = 10;
+	private logger = new Logger(ScheduleService.name);
 
 	constructor(
 		private readonly httpService: HttpService,
@@ -31,16 +33,32 @@ export class ScheduleService {
 	}
 
 	@OnEvent('schedule.job')
-	async job(options: OpenApiOptions) {
+	job(options: OpenApiOptions) {
 		const observables = Array(this.reapeatCount)
 			.fill(0)
 			.map(() =>
 				this.call({ pageIndex: options.pageIndex++, type: options.type, pagePerRow: options.pagePerRow }),
 			);
 
-		const results: OpenApiResults = await forkJoin(observables).toPromise();
+		forkJoin(observables).subscribe({
+			next: (res: any) => {
+				for (const data of res) {
+					if (!data.RESULT) {
+						if (data.Genrestrtjpnfood) this.upsert(data.Genrestrtjpnfood[1].row);
+						if (data.Genrestrtlunch) this.upsert(data.Genrestrtlunch[1].row);
+						if (data.Genrestrtchifood) this.upsert(data.Genrestrtchifood[1].row);
+					}
+				}
+			},
+		});
+	}
 
-		await this.collect(results);
+	//@Cron('5 15 * * *')
+	@Cron(CronExpression.EVERY_MINUTE)
+	private cronJob() {
+		this.job({ pageIndex: 1, pagePerRow: 1000, type: Category.JAPANESE });
+		this.job({ pageIndex: 1, pagePerRow: 1000, type: Category.KOREAN });
+		this.job({ pageIndex: 1, pagePerRow: 1000, type: Category.CHINESE });
 	}
 
 	private call(options: OpenApiOptions) {
@@ -62,25 +80,6 @@ export class ScheduleService {
 		if (sigunName) baseUrl += `&SIGUN_NM=${sigunName}`;
 
 		return baseUrl;
-	}
-
-	private async collect(openApiResults: OpenApiResults) {
-		for (const openApiResult of openApiResults) {
-			if (openApiResult.Genrestrtjpnfood) {
-				const rows = openApiResult.Genrestrtjpnfood[1].row;
-				await this.upsert(rows);
-			}
-
-			if (openApiResult.Genrestrtlunch) {
-				const rows = openApiResult.Genrestrtlunch[1].row;
-				await this.upsert(rows);
-			}
-
-			if (openApiResult.Genrestrtchifood) {
-				const rows = openApiResult.Genrestrtchifood[1].row;
-				await this.upsert(rows);
-			}
-		}
 	}
 
 	private async upsert(rows: Row[]) {
@@ -105,9 +104,9 @@ export class ScheduleService {
 					lon: row.REFINE_WGS84_LOGT,
 				});
 
-				await this.rawsRepository.upsert(newRaw, ['nameAndAddress']);
+				await this.rawsRepository.upsert(newRaw, ['nameAddress']);
 			} catch (error) {
-				console.log(error);
+				this.logger.error(error);
 			}
 		}
 	}

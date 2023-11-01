@@ -1,4 +1,4 @@
-import { OpenApiOptions } from './open-api-options.interface';
+import { OpenApiOptions } from '../interfaces/open-api-options.interface';
 import { Category } from 'src/global/enums/category.enum';
 
 export class SchduleCollectionEvent {

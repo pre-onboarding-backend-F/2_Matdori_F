@@ -18,7 +18,7 @@ export class OpenApiRaws extends BaseEntity {
 	@Column({ comment: '영업상태명' })
 	state: string;
 
-	@Column({ comment: '폐업 일자', nullable: true })
+	@Column({ name: 'closed_date', comment: '폐업 일자', nullable: true })
 	closedDate: string;
 
 	//@Column({ comment: '소재지 면적', default: null })
@@ -27,7 +27,7 @@ export class OpenApiRaws extends BaseEntity {
 	//@Column({ comment: '급수시설구분명', default: null })
 	//waterworksCode: null;
 
-	@Column({ comment: '남성 종사자 수(명)', default: null })
+	@Column({ name: 'male_workers', comment: '남성 종사자 수(명)', default: null })
 	maleWorkers: number | null;
 
 	//@Column({ comment: '년도', default: null })
@@ -42,10 +42,10 @@ export class OpenApiRaws extends BaseEntity {
 	//@Column({ comment: '총 시설 규모', default: null })
 	//totalScale: null;
 
-	@Column({ comment: '여성 종사자 수(명)', default: null })
+	@Column({ name: 'female_workers', comment: '여성 종사자 수(명)', default: null })
 	femaleWorkers: number | null;
 
-	@Column({ comment: '영업장 주변 구분명', nullable: true })
+	@Column({ name: 'zoning_name', comment: '영업장 주변 구분명', nullable: true })
 	zoningName: string | null;
 
 	//@Column({ comment: '위생 업종명', default: null })
@@ -54,26 +54,32 @@ export class OpenApiRaws extends BaseEntity {
 	@Column({ comment: '위생 업태명 (한식, 중식, 일식)' })
 	category: string;
 
-	@Column({ comment: '총 종업원 수', nullable: true })
+	@Column({ name: 'total_employment_count', comment: '총 종업원 수', nullable: true })
 	totalEmploymentCount: number | null;
 
-	@Column({ comment: '소재지 도로명 주소', nullable: true })
+	@Column({ name: 'road_address', comment: '소재지 도로명 주소', nullable: true })
 	roadAddress: string;
 
 	@Column({ comment: '소재지 지번 주소' })
 	address: string;
 
-	@Column({ comment: '소재지 우편번호', nullable: true })
+	@Column({ name: 'zip_code', comment: '소재지 우편번호', nullable: true })
 	zipCode: string;
 
-	@Column({ type: 'numeric', comment: '소재지 위도', nullable: true })
+	@Column({
+		type: 'numeric',
+		precision: 12,
+		scale: 10,
+		comment: '소재지 위도',
+		nullable: true,
+	})
 	lat: string;
 
-	@Column({ type: 'numeric', comment: '소재지 경도', nullable: true })
+	@Column({ type: 'numeric', precision: 13, scale: 10, comment: '소재지 경도', nullable: true })
 	lon: string;
 
-	@Column({ unique: true })
-	nameAndAddress: string;
+	@Column({ name: 'name_address', unique: true })
+	nameAddress: string;
 
 	@BeforeInsert()
 	transform() {
@@ -83,6 +89,6 @@ export class OpenApiRaws extends BaseEntity {
 		this.name = this.name.replace(/[._-\s]/g, '');
 		this.address = this.address.replace(/[,.\s]/g, '');
 
-		this.nameAndAddress = this.name + '_' + this.address;
+		this.nameAddress = this.name + '_' + this.address;
 	}
 }
