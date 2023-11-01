@@ -1,7 +1,7 @@
 import { BeforeInsert, Column, Entity } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { BusinessState } from '../enums/business-state.enum';
-import { RestaurantCategory } from 'src/restaurants/enums/restaurant.enum';
+import { RestaurantCategory } from 'src/restaurants/enums/restaurant-category.enum';
 
 @Entity({ name: 'open_api_raws' })
 export class OpenApiRaws extends BaseEntity {
