@@ -1,6 +1,6 @@
 import { BaseEntity } from 'src/global/entities/base.entity';
 import { Column, Entity } from 'typeorm';
-import { RestaurantCategory } from '../enums/restaurant.enum';
+import { RestaurantCategory } from '../enums/restaurant-category.enum';
 import { BusinessState } from 'src/global/enums/business-state.enum';
 
 @Entity()
