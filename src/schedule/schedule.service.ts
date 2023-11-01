@@ -63,7 +63,7 @@ export class ScheduleService {
 		});
 	}
 
-	@Cron('* 19 * * *')
+	@Cron('0 19 * * *')
 	private cronJob() {
 		this.job({ pageIndex: 1, pagePerRow: 1000, type: Category.JAPANESE });
 		this.job({ pageIndex: 1, pagePerRow: 1000, type: Category.KOREAN });

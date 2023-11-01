@@ -80,7 +80,7 @@ export class OpenApiRaws extends BaseEntity {
 	@Column({ type: 'numeric', precision: 13, scale: 10, comment: '소재지 경도', nullable: true })
 	lon: number;
 
-	@Column({ name: 'name_address', unique: true })
+	@Column({ name: 'name_address', comment: '사업장명과 주소를 합쳐 만든 고유 키', unique: true })
 	nameAddress: string;
 
 	@BeforeInsert()
