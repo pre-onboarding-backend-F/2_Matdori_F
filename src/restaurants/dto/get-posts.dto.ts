@@ -57,14 +57,14 @@ export class GetPostsDto {
 
 	@Type(() => Number)
 	@IsOptional()
-	@IsInt({ message: 'page 필드에 숫자를 입력해야 합니다.' })
-	@IsPositive({ message: 'page 필드에 음수를 입력할 수 없습니다.' })
+	@IsInt({ message: 'page 필드에 정수를 입력해야 합니다.' })
+	@IsPositive({ message: 'page 필드에 1 이상의 정수를 입력해야 합니다.' })
 	page = 1; // default: 1
 
 	@Type(() => Number)
 	@IsOptional()
-	@IsInt({ message: 'count 필드에 숫자를 입력해야 합니다.' })
-	@IsPositive({ message: 'count 필드에 음수를 입력할 수 없습니다.' })
+	@IsInt({ message: 'count 필드에 정수를 입력해야 합니다.' })
+	@IsPositive({ message: 'count 필드에 1 이상의 정수를 입력해야 합니다.' })
 	@Max(20, { message: 'count 필드의 최대 값은 20입니다.' })
 	count = 10; // default: 10
 }
