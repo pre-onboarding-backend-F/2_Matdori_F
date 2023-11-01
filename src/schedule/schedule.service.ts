@@ -13,8 +13,8 @@ import { Row } from './interfaces/row.interface';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Cron } from '@nestjs/schedule';
 import { Restaurant } from 'src/restaurants/entity/restaurant.entity';
-import { RestaurantCategory } from 'src/restaurants/enums/restaurant.enum';
 import { BusinessState } from 'src/global/enums/business-state.enum';
+import { RestaurantCategory } from 'src/restaurants/enums/restaurant-category.enum';
 
 @Injectable()
 export class ScheduleService {
