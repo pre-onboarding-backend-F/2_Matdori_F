@@ -1,7 +1,7 @@
 export enum RestaurantQueryRange {
-	ONE_KM = '1.0',
-	FIVE_KM = '5.0',
-	TEN_KM = '10.0',
+	ONE_KM = 1,
+	FIVE_KM = 5,
+	TEN_KM = 10,
 }
 
 export enum RestaurantQueryOrderBy {
