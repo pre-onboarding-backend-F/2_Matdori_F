@@ -16,4 +16,5 @@ export enum RestaurantQueryOrder {
 
 export enum RestaurantQuerySearchBy {
 	NAME = 'name',
+	CATEGORY = 'category',
 }
