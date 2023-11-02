@@ -92,8 +92,6 @@ export class UsersService {
 	async locationUpdate(user: User, locationDto: LocationDto) {
 		const { lat, lon } = locationDto;
 
-		if (lat === 0 || lon === 0) throw new BadRequestException(UsersException.LOCATION_IS_EMPTY);
-
 		user.lat = lat;
 		user.lon = lon;
 
@@ -112,8 +110,10 @@ export class UsersService {
 
 		await this.userRepository.save(user);
 
+		const convertToBoolean = user.lunchRecomm === 1;
+
 		return {
-			lunchRecomm: lunchRecomm,
+			lunchRecomm: convertToBoolean,
 		};
 	}
 }
