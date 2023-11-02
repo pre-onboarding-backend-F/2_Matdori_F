@@ -27,4 +27,8 @@ export const validationSchema = Joi.object({
 	JAPANESE_FOOD_AUTH_KEY: Joi.string().required(),
 	CHINESE_FOOD_AUTH_KEY: Joi.string().required(),
 	KOREAN_FOOD_AUTH_KEY: Joi.string().required(),
+
+	// REDIS
+	REDIS_PORT: Joi.number().required(),
+	REDIS_INSIGHT_PORT: Joi.number().required(),
 });
