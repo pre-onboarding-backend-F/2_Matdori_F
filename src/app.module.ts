@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { CitysModule } from './citys/citys.module';
 import redisConfiguration from './global/configs/redis.configuration';
 import { CacheModule } from './cache/cache.module';
+import { RatingModule } from './rating/rating.module';
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { CacheModule } from './cache/cache.module';
 		AuthModule,
 		CitysModule,
 		CacheModule,
+		RatingModule,
 	],
 })
 export class AppModule {}
