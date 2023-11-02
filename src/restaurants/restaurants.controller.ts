@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseFilters } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseFilters, UseGuards } from '@nestjs/common';
 import { RestaurantsService } from './restaurants.service';
 import { Restaurant } from './entity/restaurant.entity';
 import { HttpExceptionFilter } from 'src/global/filters/http-exception.filter';
@@ -6,9 +6,12 @@ import { CustomParseUUIDPipe } from './pipes/custom-parse-uuid.pipe';
 import { GetPostsDto } from './dto/get-posts.dto';
 import { ResponseMessage } from 'src/global/decorators/response-key.decorator';
 import { RestaurantResponse } from './enums/restaurant-response.enum';
+import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
+import { AtGuard } from 'src/global/guard/access.token.quard';
 
 @Controller('restaurants')
-@UseFilters(HttpExceptionFilter)
+@UseFilters(HttpExceptionFilter, JwtExceptionFilter)
+@UseGuards(AtGuard)
 export class RestaurantsController {
 	constructor(private readonly restaurantsService: RestaurantsService) {}
 
