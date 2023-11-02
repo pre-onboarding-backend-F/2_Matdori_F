@@ -7,16 +7,17 @@ import jwtConfiguration from './global/configs/jwt.configuration';
 import openApiConfiguration from './global/configs/open-api.configuration';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { UsersModule } from './users/users.module';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { CitysModule } from './citys/citys.module';
+import redisConfiguration from './global/configs/redis.configuration';
+import { CacheModule } from './cache/cache.module';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
 			cache: true,
-			load: [jwtConfiguration, openApiConfiguration],
+			load: [jwtConfiguration, openApiConfiguration, redisConfiguration],
 			envFilePath: `.${process.env.NODE_ENV}.env`,
 			validationSchema,
 		}),
@@ -26,6 +27,7 @@ import { CitysModule } from './citys/citys.module';
 		UsersModule,
 		AuthModule,
 		CitysModule,
+		CacheModule,
 	],
 })
 export class AppModule {}
