@@ -64,7 +64,7 @@ export class UsersService {
 					account: user.account,
 				});
 
-				await this.userRepository.update({ account }, { refreshToken });
+				await this.userRepository.update({ account }, { refresh_token: refreshToken });
 
 				return {
 					accessToken,
@@ -79,7 +79,7 @@ export class UsersService {
 	}
 
 	async logoutUser(user: User) {
-		await this.userRepository.update({ id: user.id }, { refreshToken: null });
+		await this.userRepository.update({ id: user.id }, { refresh_token: null });
 	}
 
 	async refresh(user: User) {
@@ -89,7 +89,7 @@ export class UsersService {
 		};
 	}
 
-	async locationUpdate(user: User, locationDto: LocationDto) {
+	async updateLocation(user: User, locationDto: LocationDto) {
 		const { lat, lon } = locationDto;
 
 		user.lat = lat;
@@ -103,14 +103,14 @@ export class UsersService {
 		};
 	}
 
-	async lunchRecommUpdate(user: User, lunchRecommendDto: LunchRecommendDto) {
+	async updateLunchRecomm(user: User, lunchRecommendDto: LunchRecommendDto) {
 		const { lunchRecomm } = lunchRecommendDto;
 
-		user.lunchRecomm = lunchRecomm;
+		user.lunch_recomm = lunchRecomm;
 
 		await this.userRepository.save(user);
 
-		const convertToBoolean = user.lunchRecomm === 1;
+		const convertToBoolean = user.lunch_recomm === 1;
 
 		return {
 			lunchRecomm: convertToBoolean,

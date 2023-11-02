@@ -30,7 +30,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'refresh') {
 		if (isExist) {
 			const user = await this.usersService.findUser({ id: payload.id });
 
-			if (refreshToken === user.refreshToken) return user;
+			if (refreshToken === user.refresh_token) return user;
 		}
 	}
 }
