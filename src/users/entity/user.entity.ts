@@ -29,7 +29,7 @@ export class User extends BaseEntity {
 
 	@Column({
 		default: 0,
-		type: 'smallint',
+		type: 'boolean',
 		width: 1,
 	})
 	lunchRecomm: number;
