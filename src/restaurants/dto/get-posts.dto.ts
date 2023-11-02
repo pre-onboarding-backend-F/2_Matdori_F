@@ -47,9 +47,9 @@ export class GetPostsDto {
 
 	@IsOptional()
 	@IsEnum(RestaurantQuerySearchBy, {
-		message: `searchBy 필드에 전달 가능한 값: [${RestaurantQuerySearchBy.NAME}]`,
+		message: `searchBy 필드에 전달 가능한 값: [${RestaurantQuerySearchBy.NAME}, ${RestaurantQuerySearchBy.CATEGORY}]`,
 	})
-	searchBy: RestaurantQuerySearchBy = RestaurantQuerySearchBy.NAME; // default: name
+	searchBy?: RestaurantQuerySearchBy;
 
 	@IsOptional()
 	@IsString({ message: 'search 필드에 문자열을 입력해야 합니다.' })
