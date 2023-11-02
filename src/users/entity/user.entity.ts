@@ -32,9 +32,9 @@ export class User extends BaseEntity {
 		type: 'boolean',
 		width: 1,
 	})
-	lunchRecomm: number;
+	lunch_recomm: number;
 
 	@Column({ nullable: true })
 	@Exclude()
-	refreshToken: string;
+	refresh_token: string;
 }
