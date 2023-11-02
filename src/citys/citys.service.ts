@@ -54,4 +54,8 @@ export class CitysService implements OnModuleInit {
 			}
 		});
 	}
+
+	getCities(): Promise<City[]> {
+		return this.cityRepository.find();
+	}
 }
