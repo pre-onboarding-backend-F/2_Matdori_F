@@ -1,14 +1,4 @@
-import {
-	Controller,
-	Post,
-	Get,
-	ClassSerializerInterceptor,
-	UseFilters,
-	UseInterceptors,
-	Body,
-	UseGuards,
-	Patch,
-} from '@nestjs/common';
+import { Controller, Post, Get, UseFilters, Body, UseGuards, Patch } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { HttpExceptionFilter } from 'src/global/filters/http-exception.filter';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,7 +14,6 @@ import { LocationDto } from './dto/location-user.dto';
 import { LunchRecommendDto } from './dto/lunch-recommend.dto';
 
 @Controller('users')
-@UseInterceptors(ClassSerializerInterceptor)
 @UseFilters(HttpExceptionFilter, JwtExceptionFilter)
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}

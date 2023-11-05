@@ -1,4 +1,3 @@
-import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsLatitude, IsLongitude } from 'class-validator';
 
 export class LocationDto {
