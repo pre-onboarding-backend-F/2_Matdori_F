@@ -1,5 +1,5 @@
 import { BaseEntity } from 'src/global/entities/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Restaurant } from 'src/restaurants/entity/restaurant.entity';
 import { User } from 'src/users/entity/user.entity';
 

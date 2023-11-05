@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Rating } from './entity/rating.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOperator, FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { User } from 'src/users/entity/user.entity';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { Restaurant } from 'src/restaurants/entity/restaurant.entity';
 import { RatingException } from './classes/rating.exception.message';
-import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class RatingService {

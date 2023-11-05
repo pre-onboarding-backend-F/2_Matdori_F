@@ -1,12 +1,4 @@
-import {
-	Body,
-	ClassSerializerInterceptor,
-	Controller,
-	Post,
-	UseFilters,
-	UseGuards,
-	UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { AtGuard } from 'src/global/guard/access.token.quard';
 import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
@@ -18,7 +10,6 @@ import { ResponseMessage } from 'src/global/decorators/response-key.decorator';
 import { RatingResponseMessage } from './classes/rating.response.message';
 
 @Controller('rating')
-@UseInterceptors(ClassSerializerInterceptor)
 @UseFilters(JwtExceptionFilter, HttpExceptionFilter)
 export class RatingController {
 	constructor(private readonly ratingService: RatingService) {}
