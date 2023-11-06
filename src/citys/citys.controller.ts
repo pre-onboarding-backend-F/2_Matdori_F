@@ -11,13 +11,13 @@ import { CITYS_GET_CITIES, CITYS_GET_CITIES_TTL } from './constants/citys-cache.
 
 @Controller('citys')
 @UseGuards(AtGuard)
-@UseInterceptors(CitysCacheInterceptor)
 @UseFilters(JwtExceptionFilter)
 export class CitysController {
 	constructor(private readonly citysService: CitysService) {}
 
 	@Get()
 	@ResponseMessage(CityResponse.GET_CITIES)
+	@UseInterceptors(CitysCacheInterceptor)
 	@CacheKey(CITYS_GET_CITIES)
 	@CacheTTL(CITYS_GET_CITIES_TTL)
 	getCities(): Promise<City[]> {
