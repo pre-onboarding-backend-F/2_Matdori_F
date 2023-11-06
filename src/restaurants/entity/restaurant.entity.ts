@@ -1,7 +1,8 @@
 import { BaseEntity } from 'src/global/entities/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { RestaurantCategory } from '../enums/restaurant-category.enum';
 import { BusinessState } from 'src/global/enums/business-state.enum';
+import { Rating } from 'src/rating/entity/rating.entity';
 
 @Entity()
 export class Restaurant extends BaseEntity {
@@ -49,4 +50,13 @@ export class Restaurant extends BaseEntity {
 		enum: RestaurantCategory,
 	})
 	category: RestaurantCategory;
+
+	@Column({
+		name: 'view_count',
+		default: 0,
+	})
+	viewCount: number;
+
+	@OneToMany(() => Rating, (rating) => rating.restaurant)
+	ratings: Rating[];
 }
