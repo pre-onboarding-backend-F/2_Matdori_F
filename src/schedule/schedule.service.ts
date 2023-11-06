@@ -10,7 +10,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OpenApiRaws } from 'src/global/entities/open-api-raws.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { Row } from './interfaces/row.interface';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Cron } from '@nestjs/schedule';
 import { Restaurant } from 'src/restaurants/entity/restaurant.entity';
 import { BusinessState } from 'src/global/enums/business-state.enum';
@@ -29,20 +28,8 @@ export class ScheduleService {
 		private rawsRepository: Repository<OpenApiRaws>,
 		@InjectRepository(Restaurant)
 		private restaurantRepository: Repository<Restaurant>,
-		private event: EventEmitter2,
 	) {}
 
-	jobEventEmitter() {
-		this.event.emit('schedule.job', { pageIndex: 1, pagePerRow: 1000, type: Category.JAPANESE });
-		this.event.emit('schedule.job', { pageIndex: 1, pagePerRow: 1000, type: Category.KOREAN });
-		this.event.emit('schedule.job', { pageIndex: 1, pagePerRow: 1000, type: Category.CHINESE });
-	}
-
-	preprocessEmitter() {
-		this.event.emit('schedule.saveRestaurant');
-	}
-
-	@OnEvent('schedule.job')
 	job(options: OpenApiOptions) {
 		const observables = Array(this.reapeatCount)
 			.fill(0)
@@ -92,7 +79,6 @@ export class ScheduleService {
 	}
 
 	@Cron('5 19 * * *')
-	@OnEvent('schedule.saveRestaurant')
 	private async saveAsRestaurant() {
 		const raws = await this.dataPreprocess();
 
