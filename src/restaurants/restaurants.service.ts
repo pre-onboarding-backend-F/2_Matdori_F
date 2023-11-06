@@ -100,6 +100,14 @@ export class RestaurantsService {
 		const restaurant = await this.findOneBy({ id });
 		if (!restaurant) throw new NotFoundException(RestaurantException.NOT_FOUND);
 
-		return restaurant;
+		restaurant.viewCount++;
+		this.restaurantRepository.save(restaurant);
+
+		return await this.restaurantRepository
+			.createQueryBuilder(this.restaurant)
+			.where('restaurant.id = :id', { id })
+			.leftJoin('restaurant.ratings', 'ratings')
+			.loadRelationCountAndMap('restaurant.ratingsCount', 'restaurant.ratings')
+			.getOne();
 	}
 }
