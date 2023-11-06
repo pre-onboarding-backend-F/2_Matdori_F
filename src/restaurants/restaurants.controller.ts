@@ -7,7 +7,6 @@ import { GetPostsDto } from './dto/get-posts.dto';
 import { ResponseMessage } from 'src/global/decorators/response-key.decorator';
 import { RestaurantResponse } from './enums/restaurant-response.enum';
 import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
-import { AtGuard } from 'src/global/guard/access.token.quard';
 import { CacheTTL } from '@nestjs/cache-manager';
 import { RESTAURANTS_FIND_ONE_TTL } from './constants/restaurants-cache.constants';
 import { RestaurantsCacheInterceptor } from './interceptors/restaurants-cache.interceptor';
