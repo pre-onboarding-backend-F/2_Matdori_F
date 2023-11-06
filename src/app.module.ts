@@ -12,13 +12,15 @@ import { CitysModule } from './citys/citys.module';
 import redisConfiguration from './global/configs/redis.configuration';
 import { CacheModule } from './cache/cache.module';
 import { RatingModule } from './rating/rating.module';
+import { RecommendModule } from './recommend/recommend.module';
+import webhookConfiguration from './global/configs/webhook.configuration';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
 			cache: true,
-			load: [jwtConfiguration, openApiConfiguration, redisConfiguration],
+			load: [jwtConfiguration, openApiConfiguration, redisConfiguration, webhookConfiguration],
 			envFilePath: `.${process.env.NODE_ENV}.env`,
 			validationSchema,
 		}),
@@ -30,6 +32,7 @@ import { RatingModule } from './rating/rating.module';
 		CitysModule,
 		CacheModule,
 		RatingModule,
+		RecommendModule,
 	],
 })
 export class AppModule {}

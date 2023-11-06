@@ -11,6 +11,7 @@ import { AtGuard } from 'src/global/guard/access.token.quard';
 import { CacheTTL } from '@nestjs/cache-manager';
 import { RESTAURANTS_FIND_ONE_TTL } from './constants/restaurants-cache.constants';
 import { RestaurantsCacheInterceptor } from './interceptors/restaurants-cache.interceptor';
+import { AtGuard } from 'src/global/guard/access.token.guard';
 
 @Controller('restaurants')
 @UseFilters(HttpExceptionFilter, JwtExceptionFilter)

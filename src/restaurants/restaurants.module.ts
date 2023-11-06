@@ -9,5 +9,6 @@ import { CacheModule } from 'src/cache/cache.module';
 	imports: [TypeOrmModule.forFeature([Restaurant]), CacheModule],
 	controllers: [RestaurantsController],
 	providers: [RestaurantsService],
+	exports: [RestaurantsService],
 })
 export class RestaurantsModule {}

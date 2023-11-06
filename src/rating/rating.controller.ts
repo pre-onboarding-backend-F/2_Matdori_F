@@ -1,6 +1,6 @@
 import { Body, Controller, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { CreateRatingDto } from './dto/create-rating.dto';
-import { AtGuard } from 'src/global/guard/access.token.quard';
+import { AtGuard } from 'src/global/guard/access.token.guard';
 import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
 import { RatingService } from './rating.service';
 import { GetUser } from 'src/global/decorators/get-user.decorator';

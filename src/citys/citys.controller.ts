@@ -1,7 +1,7 @@
 import { Controller, Get, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CitysService } from './citys.service';
 import { City } from './entity/city.entity';
-import { AtGuard } from 'src/global/guard/access.token.quard';
+import { AtGuard } from 'src/global/guard/access.token.guard';
 import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
 import { ResponseMessage } from 'src/global/decorators/response-key.decorator';
 import { CityResponse } from './enums/city-response.enum';
