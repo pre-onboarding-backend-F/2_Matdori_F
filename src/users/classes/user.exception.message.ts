@@ -21,4 +21,9 @@ export class UsersException {
 		message: '위도와 경도값을 확인해주세요.',
 		error: ExceptionObjError.BAD_REQUEST,
 	};
+
+	static LOCAION_IS_NULL: ExceptionObj = {
+		message: '위치 정보를 먼저 업데이트 해야합니다.',
+		error: ExceptionObjError.BAD_REQUEST,
+	};
 }

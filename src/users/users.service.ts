@@ -27,6 +27,10 @@ export class UsersService {
 		return await this.userRepository.findOne({ where: options });
 	}
 
+	async findAllUser(): Promise<User[]> {
+		return await this.userRepository.find();
+	}
+
 	async createUser(createUserDto: CreateUserDto): Promise<User> {
 		const { account, password } = createUserDto;
 
@@ -105,6 +109,10 @@ export class UsersService {
 
 	async updateLunchRecomm(user: User, lunchRecommendDto: LunchRecommendDto) {
 		const { lunchRecomm } = lunchRecommendDto;
+
+		if (user.lat === null || user.lon === null) {
+			throw new BadRequestException(UsersException.LOCAION_IS_NULL);
+		}
 
 		user.lunch_recomm = lunchRecomm;
 
