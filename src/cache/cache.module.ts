@@ -17,5 +17,6 @@ import { redisStore } from 'cache-manager-redis-yet';
 		}),
 	],
 	providers: [CacheService],
+	exports: [CacheService],
 })
 export class CacheModule {}

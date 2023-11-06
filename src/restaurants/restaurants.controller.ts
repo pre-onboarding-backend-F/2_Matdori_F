@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseFilters, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { RestaurantsService } from './restaurants.service';
 import { Restaurant } from './entity/restaurant.entity';
 import { HttpExceptionFilter } from 'src/global/filters/http-exception.filter';
@@ -7,6 +7,10 @@ import { GetPostsDto } from './dto/get-posts.dto';
 import { ResponseMessage } from 'src/global/decorators/response-key.decorator';
 import { RestaurantResponse } from './enums/restaurant-response.enum';
 import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
+import { AtGuard } from 'src/global/guard/access.token.quard';
+import { CacheTTL } from '@nestjs/cache-manager';
+import { RESTAURANTS_FIND_ONE_TTL } from './constants/restaurants-cache.constants';
+import { RestaurantsCacheInterceptor } from './interceptors/restaurants-cache.interceptor';
 import { AtGuard } from 'src/global/guard/access.token.guard';
 
 @Controller('restaurants')
@@ -22,6 +26,8 @@ export class RestaurantsController {
 	}
 
 	@Get(':id')
+	@UseInterceptors(RestaurantsCacheInterceptor)
+	@CacheTTL(RESTAURANTS_FIND_ONE_TTL)
 	@ResponseMessage(RestaurantResponse.FIND_ONE)
 	findOne(@Param('id', CustomParseUUIDPipe) id: string): Promise<Restaurant> {
 		return this.restaurantsService.findOne(id);
