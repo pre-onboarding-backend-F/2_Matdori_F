@@ -7,7 +7,7 @@ import { GetPostsDto } from './dto/get-posts.dto';
 import { ResponseMessage } from 'src/global/decorators/response-key.decorator';
 import { RestaurantResponse } from './enums/restaurant-response.enum';
 import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
-import { AtGuard } from 'src/global/guard/access.token.quard';
+import { AtGuard } from 'src/global/guard/access.token.guard';
 
 @Controller('restaurants')
 @UseFilters(HttpExceptionFilter, JwtExceptionFilter)
