@@ -5,11 +5,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ResponseMessage } from 'src/global/decorators/response-key.decorator';
 import { UserResponseMessage } from 'src/users/classes/user.response.message';
 import { LoginUserDto } from './dto/login-user.dto';
-import { AtGuard } from 'src/global/guard/access.token.quard';
+import { AtGuard } from 'src/global/guard/access.token.guard';
 import { JwtExceptionFilter } from 'src/global/filters/jwt-exception.filter';
 import { GetUser } from 'src/global/decorators/get-user.decorator';
 import { User } from './entity/user.entity';
-import { RtGuard } from 'src/global/guard/refresh.token.quard';
+import { RtGuard } from 'src/global/guard/refresh.token.guard';
 import { LocationDto } from './dto/location-user.dto';
 import { LunchRecommendDto } from './dto/lunch-recommend.dto';
 

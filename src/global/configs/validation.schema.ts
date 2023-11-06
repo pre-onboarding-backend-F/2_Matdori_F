@@ -31,4 +31,7 @@ export const validationSchema = Joi.object({
 	// REDIS
 	REDIS_PORT: Joi.number().required(),
 	REDIS_INSIGHT_PORT: Joi.number().required(),
+
+	//WEBHOOK
+	DISCODE_WEBHOOK_URL: Joi.string().required(),
 });
