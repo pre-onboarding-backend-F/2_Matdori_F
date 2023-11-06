@@ -53,8 +53,6 @@ export class RecommendService {
 			};
 		});
 
-		console.log(embeds);
-
 		const result = {
 			username: '점심봇',
 			avatar_url:
@@ -62,8 +60,6 @@ export class RecommendService {
 			content: '반경 500m 이내 랜덤 맛집',
 			embeds: embeds,
 		};
-
-		console.log(result);
 
 		fetch(this.webhookConfig.webhook.url, {
 			method: 'POST',
