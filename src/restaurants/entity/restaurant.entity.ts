@@ -51,12 +51,6 @@ export class Restaurant extends BaseEntity {
 	})
 	category: RestaurantCategory;
 
-	@Column({
-		name: 'view_count',
-		default: 0,
-	})
-	viewCount: number;
-
 	@OneToMany(() => Rating, (rating) => rating.restaurant)
 	ratings: Rating[];
 }

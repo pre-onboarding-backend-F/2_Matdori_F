@@ -96,12 +96,13 @@ export class RestaurantsService {
 		return this.restaurantRepository.findOneBy(where);
 	}
 
-	async findOne(id: string): Promise<Restaurant> {
-		const restaurant = await this.findOneBy({ id });
-		if (!restaurant) throw new NotFoundException(RestaurantException.NOT_FOUND);
+	isRestaurantExist(where: FindOptionsWhere<Restaurant>): Promise<boolean> {
+		return this.restaurantRepository.exist({ where });
+	}
 
-		restaurant.viewCount++;
-		this.restaurantRepository.save(restaurant);
+	async findOne(id: string): Promise<Restaurant> {
+		const isExist = await this.isRestaurantExist({ id });
+		if (!isExist) throw new NotFoundException(RestaurantException.NOT_FOUND);
 
 		return await this.restaurantRepository
 			.createQueryBuilder(this.restaurant)
