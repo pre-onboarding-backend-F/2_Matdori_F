@@ -56,13 +56,7 @@ export class RatingService {
 		const restaurantId = restaurant.id;
 		const crrentRating = restaurant.rating; //기존 평균값
 
-		// const crrentCount = await this.ratingRepository.count({ where: { rating: 4 } });
-		const ratings = await this.ratingRepository
-			.createQueryBuilder('rating')
-			.where('rating.restaurant = :restaurantId', { restaurantId })
-			.getMany();
-
-		const crrentCount = ratings.length; // 평가한 레스토랑 수
+		const crrentCount = await this.ratingRepository.count({ where: { restaurant: { id: restaurantId } } });
 
 		const newRatingAvg = (crrentRating * crrentCount + rating) / (crrentCount + 1);
 		const updateRatingAvg = parseFloat(newRatingAvg.toFixed(1));
