@@ -1,7 +1,6 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entity/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { UserLocations } from './interfaces/user-locations.interface';
@@ -35,7 +34,15 @@ export class RecommendService {
 
 		const recommendations = await Promise.all(usersData.map((user) => this.generateRecommendations(user)));
 
-		const embeds = usersData.map((user, idx) => {
+		const embeds = this.createEmbeds(usersData, recommendations);
+
+		const result = this.createDiscordMessage(embeds);
+
+		await this.sendDiscordMessage(result);
+	}
+
+	private createEmbeds(usersData, recommendations) {
+		return usersData.map((user, idx) => {
 			const userName = user.account;
 			const userRecommendations = recommendations[idx].map((v) => {
 				return {
@@ -52,28 +59,34 @@ export class RecommendService {
 				fields: userRecommendations,
 			};
 		});
+	}
 
-		const result = {
+	private createDiscordMessage(embeds) {
+		return {
 			username: '점심봇',
 			avatar_url:
 				'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjA2MTNfMTM5%2FMDAxNjU1MDk1MDg2Mjk4.0-2SIkWb0F0wYDg4vxqaqT8Y-Zpi_3cvFyfa3Gf4MOEg.rnc98iP66Wyv9VYpi9pD_Fq_IZF-8eXajU_88jV41d8g.JPEG.windysky70%2FIMG_5186.JPG&type=sc960_832',
 			content: '반경 500m 이내 랜덤 맛집',
 			embeds: embeds,
 		};
+	}
 
-		fetch(this.webhookConfig.webhook.url, {
-			method: 'POST',
-			body: JSON.stringify(result),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-			.then((res) => {
-				console.log('메시지가 전송되었습니다.');
-			})
-			.catch((err) => {
-				console.log(err);
+	async sendDiscordMessage(result) {
+		try {
+			const response = await fetch(this.webhookConfig.webhook.url, {
+				method: 'POST',
+				body: JSON.stringify(result),
+				headers: {
+					'Content-Type': 'application/json',
+				},
 			});
+
+			if (!response.ok) throw new Error(`메시지 전송에 실패했습니다. Status code: ${response.status}`);
+
+			console.log('메시지가 전송되었습니다.');
+		} catch (err) {
+			console.error('메시지 전송 중 오류 발생: ', err);
+		}
 	}
 
 	async generateRecommendations(user: UserLocations) {
