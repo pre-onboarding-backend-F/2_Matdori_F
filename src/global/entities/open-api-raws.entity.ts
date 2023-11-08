@@ -23,35 +23,14 @@ export class OpenApiRaws extends BaseEntity {
 	@Column({ name: 'closed_date', comment: '폐업 일자', nullable: true })
 	closedDate: string;
 
-	//@Column({ comment: '소재지 면적', default: null })
-	//area: null;
-
-	//@Column({ comment: '급수시설구분명', default: null })
-	//waterworksCode: null;
-
 	@Column({ name: 'male_workers', comment: '남성 종사자 수(명)', default: null })
 	maleWorkers: number | null;
-
-	//@Column({ comment: '년도', default: null })
-	//year: null;
-
-	//@Column({ comment: '다중 이용 업소 여부', default: null })
-	//multiUseBiz: null;
-
-	//@Column({ comment: '등급구분명', default: null })
-	//grade: null;
-
-	//@Column({ comment: '총 시설 규모', default: null })
-	//totalScale: null;
 
 	@Column({ name: 'female_workers', comment: '여성 종사자 수(명)', default: null })
 	femaleWorkers: number | null;
 
 	@Column({ name: 'zoning_name', comment: '영업장 주변 구분명', nullable: true })
 	zoningName: string | null;
-
-	//@Column({ comment: '위생 업종명', default: null })
-	//industryType: null;
 
 	@Column({ type: 'enum', enum: RestaurantCategory, comment: '위생 업태명 (한식, 중식, 일식)' })
 	category: RestaurantCategory;
